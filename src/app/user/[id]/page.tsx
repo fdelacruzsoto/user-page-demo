@@ -2,12 +2,22 @@ import { IUser } from "@/lib/types/user";
 import { API_URL } from "@/consts/api";
 import { IFriends } from "@/lib/types/friends";
 import UserCard from "./components/UserCard";
+import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: number } }) {
+
+  if(!params.id) {
+    notFound();
+  }
+
   // Get the user data
   const userData: IUser = await fetch(`${API_URL}/user/${params.id}`, {
     cache: "no-store",
   }).then((res) => res.json());
+
+  if(!userData) {
+    notFound();
+  }
 
   // Get the friends list
   const friendsList: IFriends = await fetch(`${API_URL}/friends/${params.id}`, {
